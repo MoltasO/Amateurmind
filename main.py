@@ -1,20 +1,17 @@
 import random
+difficulties = ["Easy","Hard"]
 
 def gissning():
     while True:
         kod_gissning= str(input("Ange gissning som föjld av fyra siffror"))
         if kod_gissning.isdigit:
             for char in kod_gissning:
-                
 
-difficulties = [
-    "Easy",
-    "Hard"
-]
-
+def input_(texts: str):
+    input(f"{texts} -> ")
 
 def main():
-    dif_inp = str(input("What difficulties"))
+    dif_inp = str(input("What difficulty? ->"))
     
 
 
