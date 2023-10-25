@@ -1,4 +1,4 @@
 # matermind
 Aka: Mastermind
-##Description
+## Description
 A weird game made for programming class in school.
