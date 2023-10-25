@@ -1,20 +1,36 @@
 import random
 difficulties = ["Easy","Hard"] # game(dif=1), game(dif=2)
 running = True
-#def gissning():
+
+#def guess():
 #    while True:
 #        kod_gissning= str(input("Ange gissning som föjld av fyra siffror"))
 #        if kod_gissning.isdigit:
 #            for char in kod_gissning:
+def guess(list_: list[int]):
+    if 
+
 
 def input_(texts: str):
     return input(f"{texts} -> ")
+
+def createnums(diff:int) -> list[int]:
+    list_ = []
+    if  diff == 1:
+        for i in range(1,5):
+            if i not in(list_):
+                list_.append(random.randint(1,6))
+    elif diff == 2:
+        for i in range(1,5):
+            list_.append(random.randint(1,6))
+    return list_
 
 def draw():
     pass
 
 def game(diff: int):
-    pass
+    draw()
+
 
 def main():
     while running:
