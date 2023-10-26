@@ -76,7 +76,7 @@ def createnums(diff:int) -> list[int]:
 def draw(answer_list: list[str], feedback: list[str], guesses: int):
     """
     Draws a custom handmade "gui" in the
-    terminal takes 2 list arguments.
+    terminal takes 2 list arguments and a int.
     """
 
     top_part = """\
@@ -101,7 +101,7 @@ def draw(answer_list: list[str], feedback: list[str], guesses: int):
         except IndexError:
             middle_part += f"█ {i+1: <4}{settings['background_character']*19}█\n"   #Unused Guess Segment
     bottom_text = f"{str(guesses)+' Gissningar kvar': ^24}"
-    print(top_part+middle_part+bottom_part.format(bottom_text))
+    print(top_part+middle_part+bottom_part.format(bottom_text)) # Display in terminal
 
 def game(diff: int):
     """
@@ -135,6 +135,9 @@ def game(diff: int):
             pass
             #draw(guess_list, feedback_list, settings['number of guesses']-guess_num) #Draws gui
 def main():
+    """
+    Function used to as "init" for the game loop function.
+    """
     while running:
         dif_inp = str(input_("Vilken svårighetsgrad vill du spela på? e (Enkel) / s (Svår)"))
         if dif_inp.isalpha():
