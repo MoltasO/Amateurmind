@@ -1,6 +1,19 @@
-import random
+'''
+Datorn kommer att slumpa fram en kod på fyra siffror mellan 1 och 6.
+Du ska försöka gissa denna kods siffor på max tolv drag.
+Efter respektive gissning så kommer du att få en respons:
+För varje gissad korrekt siffra på korrekt plats i koden: ✔
+För varje gissad korrekt siffra på fel plats i koden: ☐
+För de siffor som inte finns med i koden ges ingen markering.
+Exempel: om den slumpade koden är 2315
+och du gissar 3165
+så blir responsen "✔☐ ✔"
+Du får välja mellan två svårighetsnivåer:
+Lättare nivå: Alla siffor är garanterat olika
+Svårare nivå: Det kan finnas upprepningar av en eller flera siffror
+'''
 
-difficulties = ["Easy","Hard"] # game(dif=1), game(dif=2)
+import random
 running = True
 debug = True
 
@@ -27,31 +40,13 @@ settings = {
 #█ Gissningar kvar: 8  █
 #███████████████████████
 #
-board = """
-███████████████████████
-█      Mastermind     █
-█                     █
-█ 1   {a: >4}   ✔✔✔✔  █
-█ 2   1 2 3 4   ✔✔✔✔  █
-█ 3   1 2 3 4   ✔✔✔✔  █
-█ 4   1 2 3 4   ✔✔✔✔  █
-█ 5   1 2 3 4   ✔✔✔✔  █
-█ 6   1 2 3 4   ✔✔✔✔  █
-█ 7   1 2 3 4   ✔✔✔✔  █
-█ 8   1 2 3 4   ✔✔✔✔  █
-█ 9   1 2 3 4   ✔✔✔✔  █
-█ 10  1 2 3 4   ✔✔✔✔  █
-█                     █
-█ Gissningar kvar: 8  █
-███████████████████████
-""".format()
-print(board)
+
 #settings["right number right place"]
 
 def input_(texts: str):
     return input(f"{texts} -> ")    
 
-def gissning():
+def gissning() -> list[int]:
     """
     A input checker that filters out and numbers.
     """
@@ -90,33 +85,42 @@ def createnums(diff:int) -> list[int]:
         print(list_)
     return list_  
           
-def draw():
-    '''
-    Datorn kommer att slumpa fram en kod på fyra siffror mellan 1 och 6.
-    Du ska försöka gissa denna kods siffor på max tolv drag.
-    Efter respektive gissning så kommer du att få en respons:
-    För varje gissad korrekt siffra på korrekt plats i koden: ✔
-    För varje gissad korrekt siffra på fel plats i koden: ☐
-    För de siffor som inte finns med i koden ges ingen markering.
-    Exempel: om den slumpade koden är 2315
-    och du gissar 3165
-    så blir responsen "✔☐ ✔"
-    Du får välja mellan två svårighetsnivåer:
-    Lättare nivå: Alla siffor är garanterat olika
-    Svårare nivå: Det kan finnas upprepningar av en eller flera siffror
-    '''
-
-    pass
-
+def draw(answer_list: list[str], feedback: list[str]):
+    #middle_part = ""
+    for i in range(0, settings["number of guesses"]):
+        middle_part = ""
+        middle_part += f"█{i+1: <4}{answer_list[0]}   {feedback[0]}  █"
+        print(middle_part)
+#gameboard = f"""
+#██████████████████████████
+#█       Mastermind       █
+#█                        █
+#█ 1                      █
+#█ 2   1 2 3 4   ✔ ✔ ✔ ✔  █
+#█ 3   1 2 3 4   ✔ ✔ ✔ ✔  █
+#█ 4   1 2 3 4   ✔ ✔ ✔ ✔  █
+#█ 5   1 2 3 4   ✔ ✔ ✔ ✔  █
+#█ 6   1 2 3 4   ✔ ✔ ✔ ✔  █
+#█ 7   1 2 3 4   ✔ ✔ ✔ ✔  █
+#█ 8   1 2 3 4   ✔ ✔ ✔ ✔  █
+#█ 9   1 2 3 4   ✔ ✔ ✔ ✔  █
+#█ 10  1 2 3 4   ✔ ✔ ✔ ✔  █
+#█                        █
+#█   Gissningar kvar: 8   █
+#██████████████████████████
+#"""
+    #print(gameboard)
 
 def game(diff: int):
     """
     Main loop for the game.
     """
-    user_answers = []
+    feedback_list = []
+    guess_list = []
     answer = createnums(diff) # Creates the code you're trying to guess.
     for i in range(1,settings["number of guesses"]): #Guess loop
         user_guess = gissning()
+        guess_list.append(" ".join(str(e) for e in user_guess))
         if debug:
             print(user_guess, answer)
         feedback_str = ""
@@ -128,7 +132,8 @@ def game(diff: int):
             else:
                 feedback_str += settings["wrong number wrong place"]
         print(feedback_str)
-        user_answers.append(feedback_str)
+        feedback_list.append(" ".join(feedback_str))
+        draw(guess_list, feedback_list)
 
 
 def main():
