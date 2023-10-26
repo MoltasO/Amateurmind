@@ -21,9 +21,9 @@ debug = False
 #Settings that affect the game
 settings = {
     "number of guesses": 10,
-    "right number right place": "✔",
-    "right number wrong place": "☐",
-    "wrong number wrong place": " ",
+    "right number right place": "✓",
+    "right number wrong place": "◻",
+    "wrong number wrong place": "⨯",
     "background_character": " ",
     "win_message": "\n"+"#"*7+" DU VANN!!! "+"#"*7+"\n",
     "fail_message": "\n" + " "*6 + "Du förlorade :(\n"
