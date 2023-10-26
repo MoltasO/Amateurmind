@@ -15,20 +15,18 @@ Svårare nivå: Det kan finnas upprepningar av en eller flera siffror
 
 import random
 running = True
-debug = True
+debug = False
 
 
 #Settings that affect the game
-#except for "background_character"
-#it only serves as a place holder for space
-#cause py 3.11 dosn't allow for strings in f-strings.
-#python 3.12 does tho.
 settings = {
     "number of guesses": 10,
     "right number right place": "✔",
     "right number wrong place": "☐",
     "wrong number wrong place": " ",
-    "background_character": " "
+    "background_character": " ",
+    "win_message": "\n"+"#"*10+" DU VANN!!!! "+"#"*10+"\n",
+    "fail_message": "\nDu förlorade :("
 }
 
 def input_(texts: str):
@@ -40,13 +38,13 @@ def gissning() -> list[int]:
     """
     listan_gissning= []
     while True:
-        kod_gissning= (input_("Ange gissning som föjld av fyra siffror"))
+        kod_gissning= (input_("\nAnge gissning som föjld av fyra siffror"))
         if not (len(kod_gissning) == 4):
-            print("Ogilitig gissning, m")
+            print("Ogilitig gissning, måste inehålla fyra siffror.\n")
         elif not kod_gissning.isdigit():
-            print("Ogilitig gissning, får endast inehålla nummer.")
+            print("Ogilitig gissning, får endast inehålla nummer.\n")
         elif (int(kod_gissning) < 1111) or (int(kod_gissning) > 6666):
-            print("Ogilitig gissning, får endast inehålla nummer 1 till 6.")
+            print("Ogilitig gissning, får endast inehålla nummer 1 till 6.\n")
         else:
             for char in kod_gissning:
                 char=int(char)
@@ -75,21 +73,23 @@ def createnums(diff:int) -> list[int]:
         print(list_)
     return list_  
           
-def draw(answer_list: list[str], feedback: list[str]):
+def draw(answer_list: list[str], feedback: list[str], guesses: int):
     """
     Draws a custom handmade "gui" in the
     terminal takes 2 list arguments.
     """
 
     top_part = """\
+
+    
 ██████████████████████████
 █       Mastermind       █
 █                        █
 """
 
-    bottom_part = f"""\
+    bottom_part = """\
 █                        █
-█   Gissningar kvar: 8   █
+█{}█
 ██████████████████████████
 """
 
@@ -100,7 +100,8 @@ def draw(answer_list: list[str], feedback: list[str]):
             middle_part += f"█ {i+1: <4}{answer_list[i]}   {feedback[i]}  █\n"      #Used Guess Segment
         except IndexError:
             middle_part += f"█ {i+1: <4}{settings['background_character']*19}█\n"   #Unused Guess Segment
-    print(top_part+middle_part+bottom_part)
+    bottom_text = f"{str(guesses)+' Gissningar kvar': ^24}"
+    print(top_part+middle_part+bottom_part.format(bottom_text))
 
 def game(diff: int):
     """
@@ -109,7 +110,7 @@ def game(diff: int):
     feedback_list = [] #List of str contains the feedback.
     guess_list = []  #List of int contains user guesses.
     answer = createnums(diff) # Creates the code you're trying to guess.
-    for guess_num in range(1,settings["number of guesses"]): #Guess loop
+    for guess_num in range(1,settings["number of guesses"]+1): #Guess loop
         user_guess = gissning()
         guess_list.append(" ".join(str(e) for e in user_guess))
         if debug:
@@ -123,24 +124,28 @@ def game(diff: int):
             else:
                 feedback_str += settings["wrong number wrong place"]
         feedback_list.append(" ".join(feedback_str))
+        draw(guess_list, feedback_list, settings['number of guesses']-guess_num) #Draws gui
         if user_guess == answer: # Does some special thing if you win
-            print("YOU DID IT!") 
+            print(settings["win_message"]) 
+            break
+        elif guess_num == settings["number of guesses"]:
+            print(settings["fail_message"])
+            break
         else:
-            draw(guess_list, feedback_list) #Draws gui
-
-
+            pass
+            #draw(guess_list, feedback_list, settings['number of guesses']-guess_num) #Draws gui
 def main():
     while running:
-        dif_inp = str(input_("What difficulty do you want to play on? e (Easy) / h (Hard)"))
+        dif_inp = str(input_("Vilken svårighetsgrad vill du spela på? e (Enkel) / s (Svår)"))
         if dif_inp.isalpha():
             if  dif_inp.lower() == "e":
                 game(diff=1)
                 break
-            elif dif_inp.lower() == "h":
+            elif dif_inp.lower() == "s":
                 game(diff=2)
                 break
         else:
-            print("Invalid input, try again. \n")
+            print(f"{dif_inp} är inte en accepterad input.\n")
     
 
 
