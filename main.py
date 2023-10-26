@@ -17,31 +17,19 @@ import random
 running = True
 debug = True
 
+
+#Settings that affect the game
+#except for "background_character"
+#it only serves as a place holder for space
+#cause py 3.11 dosn't allow for strings in f-strings.
+#python 3.12 does tho.
 settings = {
     "number of guesses": 10,
     "right number right place": "✔",
     "right number wrong place": "☐",
     "wrong number wrong place": " ",
+    "background_character": " "
 }
-#
-#███████████████████████
-#█                     █
-#█ 1   1 2 3 4   ✔✔✔✔  █
-#█ 2   1 2 3 4   ✔✔✔✔  █
-#█ 3   1 2 3 4   ✔✔✔✔  █
-#█ 4   1 2 3 4   ✔✔✔✔  █
-#█ 5   1 2 3 4   ✔✔✔✔  █
-#█ 6   1 2 3 4   ✔✔✔✔  █
-#█ 7   1 2 3 4   ✔✔✔✔  █
-#█ 8   1 2 3 4   ✔✔✔✔  █
-#█ 9   1 2 3 4   ✔✔✔✔  █
-#█ 10  1 2 3 4   ✔✔✔✔  █
-#█                     █
-#█ Gissningar kvar: 8  █
-#███████████████████████
-#
-
-#settings["right number right place"]
 
 def input_(texts: str):
     return input(f"{texts} -> ")    
@@ -57,6 +45,8 @@ def gissning() -> list[int]:
             print("Ogilitig gissning, m")
         elif not kod_gissning.isdigit():
             print("Ogilitig gissning, får endast inehålla nummer.")
+        elif (int(kod_gissning) <= 0) or (int(kod_gissning) > 6):
+            print("Ogilitig gissning, får endast inehålla nummer 1 till 6.")
         else:
             for char in kod_gissning:
                 char=int(char)
@@ -70,7 +60,7 @@ def createnums(diff:int) -> list[int]:
     has two settings using 1 and 2
     where the first setting creates a list
     of random numbers that does not have any duplicates
-    whereas the 2nd setting allows it.
+    where as the 2nd setting allows duplicates.
     """
     list_ = []
     if  diff == 1:
@@ -86,59 +76,62 @@ def createnums(diff:int) -> list[int]:
     return list_  
           
 def draw(answer_list: list[str], feedback: list[str]):
-    #middle_part = ""
+    """
+    Draws a custom handmade "gui" in the
+    terminal takes 2 list arguments.
+    """
+
+    top_part = """\
+██████████████████████████
+█       Mastermind       █
+█                        █
+"""
+
+    bottom_part = f"""\
+█                        █
+█   Gissningar kvar: 8   █
+██████████████████████████
+"""
+
+
+    middle_part = "" #Draws the correct amount of "Segments" depending on the game settings.
     for i in range(0, settings["number of guesses"]):
-        middle_part = ""
-        middle_part += f"█{i+1: <4}{answer_list[0]}   {feedback[0]}  █"
-        print(middle_part)
-#gameboard = f"""
-#██████████████████████████
-#█       Mastermind       █
-#█                        █
-#█ 1                      █
-#█ 2   1 2 3 4   ✔ ✔ ✔ ✔  █
-#█ 3   1 2 3 4   ✔ ✔ ✔ ✔  █
-#█ 4   1 2 3 4   ✔ ✔ ✔ ✔  █
-#█ 5   1 2 3 4   ✔ ✔ ✔ ✔  █
-#█ 6   1 2 3 4   ✔ ✔ ✔ ✔  █
-#█ 7   1 2 3 4   ✔ ✔ ✔ ✔  █
-#█ 8   1 2 3 4   ✔ ✔ ✔ ✔  █
-#█ 9   1 2 3 4   ✔ ✔ ✔ ✔  █
-#█ 10  1 2 3 4   ✔ ✔ ✔ ✔  █
-#█                        █
-#█   Gissningar kvar: 8   █
-#██████████████████████████
-#"""
-    #print(gameboard)
+        try:  #Checks if the index exists in the lists.
+            middle_part += f"█ {i+1: <4}{answer_list[i]}   {feedback[i]}  █\n"      #Used Guess Segment
+        except IndexError:
+            middle_part += f"█ {i+1: <4}{settings['background_character']*19}█\n"   #Unused Guess Segment
+    print(top_part+middle_part+bottom_part)
 
 def game(diff: int):
     """
     Main loop for the game.
     """
-    feedback_list = []
-    guess_list = []
+    feedback_list = [] #List of str contains the feedback.
+    guess_list = []  #List of int contains user guesses.
     answer = createnums(diff) # Creates the code you're trying to guess.
-    for i in range(1,settings["number of guesses"]): #Guess loop
+    for guess_num in range(1,settings["number of guesses"]): #Guess loop
         user_guess = gissning()
         guess_list.append(" ".join(str(e) for e in user_guess))
         if debug:
             print(user_guess, answer)
         feedback_str = ""
-        for i in range(0,len(user_guess)):
-            if answer[i] == user_guess[i]:
+        for char in range(0,len(user_guess)): #Goes thrugh the answer and checks what is right.
+            if answer[char] == user_guess[char]:
                 feedback_str += settings["right number right place"]
-            elif user_guess[i] in answer:
+            elif user_guess[char] in answer:
                 feedback_str += settings["right number wrong place"]
             else:
                 feedback_str += settings["wrong number wrong place"]
-        print(feedback_str)
         feedback_list.append(" ".join(feedback_str))
-        draw(guess_list, feedback_list)
+        if user_guess == answer: # Does some special thing if you win
+            print("YOU DID IT!") 
+        else:
+            draw(guess_list, feedback_list) #Draws gui
 
 
 def main():
     while running:
-        dif_inp = str(input_("What difficulty do you want to play on? e (Easy), h (Hard)"))
+        dif_inp = str(input_("What difficulty do you want to play on? e (Easy) / h (Hard)"))
         if dif_inp.isalpha():
             if  dif_inp.lower() == "e":
                 game(diff=1)
