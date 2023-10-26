@@ -5,8 +5,48 @@ running = True
 debug = True
 
 settings = {
-    "number of guesses": 10
+    "number of guesses": 10,
+    "right number right place": "✔",
+    "right number wrong place": "☐",
+    "wrong number wrong place": " ",
 }
+#
+#███████████████████████
+#█                     █
+#█ 1   1 2 3 4   ✔✔✔✔  █
+#█ 2   1 2 3 4   ✔✔✔✔  █
+#█ 3   1 2 3 4   ✔✔✔✔  █
+#█ 4   1 2 3 4   ✔✔✔✔  █
+#█ 5   1 2 3 4   ✔✔✔✔  █
+#█ 6   1 2 3 4   ✔✔✔✔  █
+#█ 7   1 2 3 4   ✔✔✔✔  █
+#█ 8   1 2 3 4   ✔✔✔✔  █
+#█ 9   1 2 3 4   ✔✔✔✔  █
+#█ 10  1 2 3 4   ✔✔✔✔  █
+#█                     █
+#█ Gissningar kvar: 8  █
+#███████████████████████
+#
+board = """
+███████████████████████
+█      Mastermind     █
+█                     █
+█ 1   {a: >4}   ✔✔✔✔  █
+█ 2   1 2 3 4   ✔✔✔✔  █
+█ 3   1 2 3 4   ✔✔✔✔  █
+█ 4   1 2 3 4   ✔✔✔✔  █
+█ 5   1 2 3 4   ✔✔✔✔  █
+█ 6   1 2 3 4   ✔✔✔✔  █
+█ 7   1 2 3 4   ✔✔✔✔  █
+█ 8   1 2 3 4   ✔✔✔✔  █
+█ 9   1 2 3 4   ✔✔✔✔  █
+█ 10  1 2 3 4   ✔✔✔✔  █
+█                     █
+█ Gissningar kvar: 8  █
+███████████████████████
+""".format()
+print(board)
+#settings["right number right place"]
 
 def input_(texts: str):
     return input(f"{texts} -> ")    
@@ -39,11 +79,12 @@ def createnums(diff:int) -> list[int]:
     """
     list_ = []
     if  diff == 1:
-        for i in range(1,5):
-            if i not in(list_):
-                list_.append(random.randint(1,6))
+        while len(list_) < 4:
+            num_to_add = random.randint(1,6)
+            if num_to_add not in list_:
+                list_.append(num_to_add)
     elif diff == 2:
-        for i in range(1,5):
+        while len(list_) < 4:
             list_.append(random.randint(1,6))
     if debug:
         print(list_)
@@ -59,11 +100,12 @@ def draw():
     För de siffor som inte finns med i koden ges ingen markering.
     Exempel: om den slumpade koden är 2315
     och du gissar 3165
-    så blir responsen ✔☐☐
+    så blir responsen "✔☐ ✔"
     Du får välja mellan två svårighetsnivåer:
     Lättare nivå: Alla siffor är garanterat olika
     Svårare nivå: Det kan finnas upprepningar av en eller flera siffror
     '''
+
     pass
 
 
@@ -75,15 +117,19 @@ def game(diff: int):
     answer = createnums(diff) # Creates the code you're trying to guess.
     for i in range(1,settings["number of guesses"]): #Guess loop
         user_guess = gissning()
-        ""
-        #draw()
-        for i in user_guess:
-            if i in answer and user_guess.index(i) in answer.index(i):
-                pass
-            elif i in answer:
-                pass
+        if debug:
+            print(user_guess, answer)
+        feedback_str = ""
+        for i in range(0,len(user_guess)):
+            if answer[i] == user_guess[i]:
+                feedback_str += settings["right number right place"]
+            elif user_guess[i] in answer:
+                feedback_str += settings["right number wrong place"]
             else:
-                pass
+                feedback_str += settings["wrong number wrong place"]
+        print(feedback_str)
+        user_answers.append(feedback_str)
+
 
 def main():
     while running:
