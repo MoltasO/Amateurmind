@@ -25,12 +25,15 @@ settings = {
     "right number wrong place": "☐",
     "wrong number wrong place": " ",
     "background_character": " ",
-    "win_message": "\n"+"#"*10+" DU VANN!!!! "+"#"*10+"\n",
-    "fail_message": "\nDu förlorade :("
+    "win_message": "\n"+"#"*7+" DU VANN!!! "+"#"*7+"\n",
+    "fail_message": "\n" + " "*6 + "Du förlorade :(\n"
 }
 
 def input_(texts: str):
-    return input(f"{texts} -> ")    
+    return input(f"{texts} -> ")
+
+def clear_screen():
+    print(f"\033[2J")
 
 def gissning() -> list[int]:
     """
@@ -101,6 +104,7 @@ def draw(answer_list: list[str], feedback: list[str], guesses: int):
         except IndexError:
             middle_part += f"█ {i+1: <4}{settings['background_character']*19}█\n"   #Unused Guess Segment
     bottom_text = f"{str(guesses)+' Gissningar kvar': ^24}"
+    clear_screen()
     print(top_part+middle_part+bottom_part.format(bottom_text)) # Display in terminal
 
 def game(diff: int):
@@ -155,3 +159,4 @@ def main():
 if __name__ == "__main__":
     main()
     exit("Program exited.\n")
+    
