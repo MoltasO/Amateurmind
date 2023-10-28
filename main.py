@@ -61,7 +61,7 @@ def gissning() -> list[int]:
 
 
 
-def createnums(diff:int) -> list[int]:
+def create_nums(diff:int) -> list[int]:
     """
     Create a list of numbers to 
     be the code you're trying to guess
@@ -86,8 +86,7 @@ def createnums(diff:int) -> list[int]:
     
 def draw(answer_list: list[str], feedback: list[str], guesses: int):
     """
-    Draws a custom handmade "gui" in the
-    terminal takes 2 list arguments and a int.
+    Draws a custom handmade ASCII "gui" in the terminal.
     """
 
     top_part = """\
@@ -116,23 +115,16 @@ def draw(answer_list: list[str], feedback: list[str], guesses: int):
     print(top_part+middle_part+bottom_part.format(bottom_text)) # Display in terminal
 
 
+def generate_feedback(answer: list[int], user_guess: list[int]) -> list[str]:
+    """
+    Generates a list with feedback
+    based on wether or not the numbers
+    match or not.
+    """
+    feedback_list: list[str] = []
+    feedback_list.extend(settings["wrong number wrong place"] for _ in range(4))
 
-def game(diff: int):
-    """
-    Main loop for the game.
-    """
-    feedback_return_list = [] #List of str contains the feedback.
-    guess_list = []  #List of int contains user guesses.
-    answer = createnums(diff) # Creates the code you're trying to guess.
-    for guess_num in range(1,settings["number of guesses"]+1): #Guess loop
-        user_guess = gissning()
-        guess_list.append(" ".join(str(e) for e in user_guess))
-        feedback_list = []
-        feedback_list.extend(settings["wrong number wrong place"] for i in range(4))
-        if debug:
-            print(user_guess, answer)
-            print(feedback_list)
-        for i in range(1,7): #Loops trugh all numbers from 1 to 6
+    for i in range(1,7): #Loops trugh all numbers from 1 to 6
             occuranses = answer.count(i)
             for user_num_index in range(0, len(user_guess)): # Checks which ones are right
                 if user_guess[user_num_index] is i:
@@ -145,8 +137,20 @@ def game(diff: int):
                     if user_guess[user_num_index] is not answer[user_num_index]:
                         feedback_list[user_num_index] = settings["right number wrong place"]
                         occuranses -= 1
+    return feedback_list
 
-        feedback_return_list.append(" ".join(feedback_list))
+
+def game(diff: int):
+    """
+    Main loop for the game.
+    """
+    feedback_return_list: list[list] = [] #List of str contains the feedback.
+    guess_list: list[list] = []  #List of int contains user guesses.
+    answer = create_nums(diff) # Creates the code you're trying to guess.
+    for guess_num in range(1,settings["number of guesses"]+1): #Guess loop
+        user_guess = gissning()
+        guess_list.append(" ".join(str(e) for e in user_guess))
+        feedback_return_list.append(" ".join(generate_feedback(answer,user_guess)))
         draw(guess_list, feedback_return_list, settings['number of guesses']-guess_num) #Draws gui
         if user_guess == answer: # Does some special thing if you win
             print(settings["win_message"]) 
