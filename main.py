@@ -15,7 +15,7 @@ Svårare nivå: Det kan finnas upprepningar av en eller flera siffror
 
 import random
 running = True
-debug = False
+debug = True
 
 
 #Settings that affect the game
@@ -33,7 +33,8 @@ def input_(texts: str):
     return input(f"{texts} -> ")
 
 def clear_screen():
-    print(f"\033[2J")
+    if not debug:
+        print(f"\033[2J")
 
 def gissning() -> list[int]:
     """
@@ -111,24 +112,33 @@ def game(diff: int):
     """
     Main loop for the game.
     """
-    feedback_list = [] #List of str contains the feedback.
+    feedback_return_list = [] #List of str contains the feedback.
     guess_list = []  #List of int contains user guesses.
     answer = createnums(diff) # Creates the code you're trying to guess.
     for guess_num in range(1,settings["number of guesses"]+1): #Guess loop
         user_guess = gissning()
         guess_list.append(" ".join(str(e) for e in user_guess))
+        feedback_list = []
+        feedback_list.extend(settings["wrong number wrong place"] for i in range(4))
         if debug:
             print(user_guess, answer)
-        feedback_str = ""
-        for char in range(0,len(user_guess)): #Goes thrugh the answer and checks what is right.
-            if answer[char] == user_guess[char]:
-                feedback_str += settings["right number right place"]
-            elif user_guess[char] in answer:
-                feedback_str += settings["right number wrong place"]
-            else:
-                feedback_str += settings["wrong number wrong place"]
-        feedback_list.append(" ".join(feedback_str))
-        draw(guess_list, feedback_list, settings['number of guesses']-guess_num) #Draws gui
+            print(feedback_list)
+        for i in range(1,7):
+            occuranses = answer.count(i)
+            for user_num_index in range(0, len(user_guess)): # 1 2 3 4
+                if user_guess[user_num_index] is i:
+                    if user_guess[user_num_index] is answer[user_num_index]:
+                        feedback_list[user_num_index] = settings["right number right place"]
+                        occuranses -= 1
+
+            for user_num_index in range(0, len(user_guess)): # 1 2 3 4
+                if (user_guess[user_num_index] is i) and (occuranses > 0):
+                    if user_guess[user_num_index] is not answer[user_num_index]:
+                        feedback_list[user_num_index] = settings["right number wrong place"]
+                        occuranses -= 1
+
+        feedback_return_list.append(" ".join(feedback_list))
+        draw(guess_list, feedback_return_list, settings['number of guesses']-guess_num) #Draws gui
         if user_guess == answer: # Does some special thing if you win
             print(settings["win_message"]) 
             break
