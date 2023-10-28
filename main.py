@@ -32,9 +32,13 @@ settings = {
 def input_(texts: str):
     return input(f"{texts} -> ")
 
+
+
 def clear_screen():
     if not debug:
         print(f"\033[2J")
+
+
 
 def gissning() -> list[int]:
     """
@@ -54,7 +58,9 @@ def gissning() -> list[int]:
                 char=int(char)
                 listan_gissning.append(char)
             return listan_gissning
-            
+
+
+
 def createnums(diff:int) -> list[int]:
     """
     Create a list of numbers to 
@@ -76,7 +82,8 @@ def createnums(diff:int) -> list[int]:
     if debug:
         print(list_)
     return list_  
-          
+
+    
 def draw(answer_list: list[str], feedback: list[str], guesses: int):
     """
     Draws a custom handmade "gui" in the
@@ -108,6 +115,8 @@ def draw(answer_list: list[str], feedback: list[str], guesses: int):
     clear_screen()
     print(top_part+middle_part+bottom_part.format(bottom_text)) # Display in terminal
 
+
+
 def game(diff: int):
     """
     Main loop for the game.
@@ -123,15 +132,15 @@ def game(diff: int):
         if debug:
             print(user_guess, answer)
             print(feedback_list)
-        for i in range(1,7):
+        for i in range(1,7): #Loops trugh all numbers from 1 to 6
             occuranses = answer.count(i)
-            for user_num_index in range(0, len(user_guess)): # 1 2 3 4
+            for user_num_index in range(0, len(user_guess)): # Checks which ones are right
                 if user_guess[user_num_index] is i:
                     if user_guess[user_num_index] is answer[user_num_index]:
                         feedback_list[user_num_index] = settings["right number right place"]
                         occuranses -= 1
 
-            for user_num_index in range(0, len(user_guess)): # 1 2 3 4
+            for user_num_index in range(0, len(user_guess)): # Checks which ones are in the wrong place
                 if (user_guess[user_num_index] is i) and (occuranses > 0):
                     if user_guess[user_num_index] is not answer[user_num_index]:
                         feedback_list[user_num_index] = settings["right number wrong place"]
@@ -148,6 +157,9 @@ def game(diff: int):
         else:
             pass
             #draw(guess_list, feedback_list, settings['number of guesses']-guess_num) #Draws gui
+
+
+
 def main():
     """
     Function used to as "init" for the game loop function.
@@ -164,7 +176,6 @@ def main():
         else:
             print(f"{dif_inp} är inte en accepterad input.\n")
     
-
 
 if __name__ == "__main__":
     main()
