@@ -15,7 +15,7 @@ Svårare nivå: Det kan finnas upprepningar av en eller flera siffror
 
 import random
 running = True
-debug = True
+debug = False
 
 
 #Settings that affect the game
