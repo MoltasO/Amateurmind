@@ -15,7 +15,7 @@ Svårare nivå: Det kan finnas upprepningar av en eller flera siffror
 
 import random
 running = True
-debug = False
+debug = True
 
 
 #Settings that affect the game
@@ -121,23 +121,25 @@ def generate_feedback(answer: list[int], user_guess: list[int]) -> list[str]:
     based on wether or not the numbers
     match or not.
     """
-    feedback_list: list[str] = []
-    feedback_list.extend(settings["wrong number wrong place"] for _ in range(4))
+    feedback_str: str = []
+    for i in range(0,7):
+        occuranses = answer.count(i)
+        for guess_num_index in range(0, len(user_guess)):
+            if user_guess[guess_num_index] is i:
+                if user_guess[guess_num_index] is answer[guess_num_index]:
+                    feedback_str += settings["right number right place"]
+                    occuranses -= 1
 
-    for i in range(1,7): #Loops trugh all numbers from 1 to 6
-            occuranses = answer.count(i)
-            for user_num_index in range(0, len(user_guess)): # Checks which ones are right
-                if user_guess[user_num_index] is i:
-                    if user_guess[user_num_index] is answer[user_num_index]:
-                        feedback_list[user_num_index] = settings["right number right place"]
-                        occuranses -= 1
+        for guess_num_index in range(0, len(user_guess)):
+            if (user_guess[guess_num_index] is i) and (occuranses > 0):
+                if (user_guess[guess_num_index] in answer) and (user_guess[guess_num_index] is not answer[guess_num_index]):
+                    feedback_str += settings["right number wrong place"]
+                    occuranses -= 1
 
-            for user_num_index in range(0, len(user_guess)): # Checks which ones are in the wrong place
-                if (user_guess[user_num_index] is i) and (occuranses > 0):
-                    if user_guess[user_num_index] is not answer[user_num_index]:
-                        feedback_list[user_num_index] = settings["right number wrong place"]
-                        occuranses -= 1
-    return feedback_list
+    while len(feedback_str) < 4:
+        feedback_str += settings["wrong number wrong place"]
+
+    return feedback_str
 
 
 def game(diff: int):
@@ -177,6 +179,8 @@ def main():
             elif dif_inp.lower() == "s":
                 game(diff=2)
                 break
+            else:
+                print(f"{dif_inp} är inte en accepterad input.\n")
         else:
             print(f"{dif_inp} är inte en accepterad input.\n")
     
