@@ -51,13 +51,16 @@ def gissning() -> list[int]:
             print("Ogilitig gissning, måste inehålla fyra siffror.\n")
         elif not kod_gissning.isdigit():
             print("Ogilitig gissning, får endast inehålla nummer.\n")
-        elif (int(kod_gissning) < 1111) or (int(kod_gissning) > 6666):
-            print("Ogilitig gissning, får endast inehålla nummer 1 till 6.\n")
         else:
-            for char in kod_gissning:
-                char=int(char)
-                listan_gissning.append(char)
-            return listan_gissning
+            for i in len(int(gissning)):
+                if i<7 or i>0:
+                    for char in kod_gissning:
+                        char=int(char)
+                        listan_gissning.append(char)
+                    return listan_gissning
+                else:
+                     print("Ogilitig gissning, får endast inehålla nummer mellan 1 och 6.\n")
+
 
 
 
