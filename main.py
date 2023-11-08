@@ -1,21 +1,21 @@
-'''
+print('''
 Datorn kommer att slumpa fram en kod på fyra siffror mellan 1 och 6.
 Du ska försöka gissa denna kods siffor på max tolv drag.
 Efter respektive gissning så kommer du att få en respons:
 För varje gissad korrekt siffra på korrekt plats i koden: ✔
 För varje gissad korrekt siffra på fel plats i koden: ☐
-För de siffor som inte finns med i koden ges ingen markering.
+För de siffor som inte finns med i koden ges: ⨯
 Exempel: om den slumpade koden är 2315
 och du gissar 3165
-så blir responsen "✔☐ ✔"
+så blir responsen "✔✔✔⨯"
 Du får välja mellan två svårighetsnivåer:
 Lättare nivå: Alla siffor är garanterat olika
 Svårare nivå: Det kan finnas upprepningar av en eller flera siffror
-'''
+''')
 
 import random
 running = True
-debug = True
+debug = False
 
 
 #Settings that affect the game
@@ -122,22 +122,34 @@ def generate_feedback(answer: list[int], user_guess: list[int]) -> list[str]:
     match or not.
     """
     feedback_str: str = []
+    rights = 0
+    mabyes = 0
     for i in range(0,7):
         occuranses = answer.count(i)
         for guess_num_index in range(0, len(user_guess)):
             if user_guess[guess_num_index] is i:
                 if user_guess[guess_num_index] is answer[guess_num_index]:
-                    feedback_str += settings["right number right place"]
+                    #feedback_str += settings["right number right place"]
                     occuranses -= 1
+                    rights += 1
 
         for guess_num_index in range(0, len(user_guess)):
             if (user_guess[guess_num_index] is i) and (occuranses > 0):
                 if (user_guess[guess_num_index] in answer) and (user_guess[guess_num_index] is not answer[guess_num_index]):
-                    feedback_str += settings["right number wrong place"]
+                    #feedback_str += settings["right number wrong place"]
                     occuranses -= 1
+                    mabyes += 1
+
+
+    for _ in range(rights):
+        feedback_str += settings["right number right place"]
+    
+    for _ in range(mabyes):
+        feedback_str += settings["right number wrong place"]
 
     while len(feedback_str) < 4:
         feedback_str += settings["wrong number wrong place"]
+    
 
     return feedback_str
 
