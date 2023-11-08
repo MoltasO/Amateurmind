@@ -175,10 +175,8 @@ def main():
         if dif_inp.isalpha():
             if  dif_inp.lower() == "e":
                 game(diff=1)
-                break
             elif dif_inp.lower() == "s":
                 game(diff=2)
-                break
             else:
                 print(f"{dif_inp} är inte en accepterad input.\n")
         else:
