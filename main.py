@@ -189,7 +189,6 @@ def main():
     Function used to as "init" for the game loop function.
     """
     while True:
-        clear_screen()
         round_diff_question = ask("Vilken svårighetsgrad vill du spela på? e (Enkel) / s (Svår)", "e", "s")
         if round_diff_question:
             game(diff=1)
