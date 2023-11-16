@@ -27,14 +27,16 @@ settings = {
     "win_message": "\n\33[32m"+"#"*7+" DU VANN!!! "+"#"*7+"\n\33[0m",
     "fail_message": "\n\33[31m" + " "*6 + "Du förlorade :(\n\33[0m"
 }
-
+#Adds arrows to the input automagicaly.
 def input_(texts: str):
     return input(f"\n{texts} -> ")
 
+#Uses wierd ANSI characters to clear screen.
 def clear_screen():
     if not debug:
         print(f"\033[2J")
 
+#checks so the input consists of four numbers between 1 and 6
 def numcheck(nums: str) -> bool:
     for i in range(len(nums)):
         if 0 < int(nums[i]) < 7:
@@ -44,8 +46,10 @@ def numcheck(nums: str) -> bool:
     return True
 
 def ask(question: str, true_option: str, false_option: str) -> bool:
-    """
-    Do you want to qestion? true/false
+    """'
+    Asks a question that can have two answers essentialy 
+    true of false and then returns a bool based on that.
+    Do you want to question? yes/true (y)/(n) no/false
     """
     while True:
         raw_input = str(input_(question))
