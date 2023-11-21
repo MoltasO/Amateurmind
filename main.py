@@ -5,9 +5,9 @@ Efter respektive gissning så kommer du att få en respons:
 För varje gissad korrekt siffra på korrekt plats i koden: ✔
 För varje gissad korrekt siffra på fel plats i koden: ☐
 För de siffor som inte finns med i koden ges: ⨯
-Exempel: om den slumpade koden är 2315
-och du gissar 3165
-så blir responsen "✔✔✔⨯"
+Exempel: om den slumpade koden är 1234
+och du gissar 2135
+så blir responsen "✔☐☐⨯"
 Du får välja mellan två svårighetsnivåer:
 Lättare nivå: Alla siffor är garanterat olika
 Svårare nivå: Det kan finnas upprepningar av en eller flera siffror
@@ -28,16 +28,18 @@ settings = {
     "fail_message": "\n\33[31m" + " "*6 + "Du förlorade :(\n\33[0m"
 }
 #Adds arrows to the input automagicaly.
-def input_(texts: str):
+def input_(texts: str) -> str:
     return input(f"\n{texts} -> ")
 
-#Uses wierd ANSI characters to clear screen.
+#Uses ANSI characters to clear screen.
 def clear_screen():
     if not debug:
         print(f"\033[2J")
 
-#checks so the input consists of four numbers between 1 and 6
 def numcheck(nums: str) -> bool:
+    """
+    Checks so the input string consists of numbers between 1 and 6.
+    """
     for i in range(len(nums)):
         if 0 < int(nums[i]) < 7:
             continue
@@ -46,9 +48,9 @@ def numcheck(nums: str) -> bool:
     return True
 
 def ask(question: str, true_option: str, false_option: str) -> bool:
-    """'
+    """
     Asks a question that can have two answers essentialy 
-    true of false and then returns a bool based on that.
+    true or false and then returns a bool based on that.
     Do you want to question? yes/true (y)/(n) no/false
     """
     while True:
@@ -113,7 +115,7 @@ def draw(answer_list: list[str], feedback: list[str], guesses: int):
 
     
 ██████████████████████████
-█       Mastermind       █
+█       \33[1mMastermind\33[0m       █
 █                        █
 """
 
@@ -186,8 +188,7 @@ def game(diff: int):
             break
         else:
             pass
-            #draw(guess_list, feedback_list, settings['number of guesses']-guess_num) #Draws gui
-
+        
 def main():
     """
     Function used to as "init" for the game loop function.
@@ -202,6 +203,9 @@ def main():
             break
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit("Program exited.\n")
     exit("Program exited.\n")
     
