@@ -7,7 +7,7 @@ För varje gissad korrekt siffra på fel plats i koden: ☐
 För de siffor som inte finns med i koden ges: ⨯
 Exempel: om den slumpade koden är 1234
 och du gissar 2135
-så blir responsen "✔☐☐⨯"
+så blir responsen "✔ ☐ ☐ ⨯"
 Du får välja mellan två svårighetsnivåer:
 Lättare nivå: Alla siffor är garanterat olika
 Svårare nivå: Det kan finnas upprepningar av en eller flera siffror
