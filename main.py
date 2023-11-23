@@ -13,7 +13,7 @@ Lättare nivå: Alla siffor är garanterat olika
 Svårare nivå: Det kan finnas upprepningar av en eller flera siffror
 ''')
 
-import random
+from random import randint
 debug = False
 
 
@@ -97,12 +97,12 @@ def create_nums(diff:int) -> list[int]:
     random_num_list = []
     if  diff == 1:
         while len(random_num_list) < 4:
-            num_to_add = random.randint(1,6)
+            num_to_add = randint(1,6)
             if num_to_add not in random_num_list:
                 random_num_list.append(num_to_add)
     elif diff == 2:
         while len(random_num_list) < 4:
-            random_num_list.append(random.randint(1,6))
+            random_num_list.append(randint(1,6))
     if debug:
         print(random_num_list)
     return random_num_list  
