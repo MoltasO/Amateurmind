@@ -17,7 +17,6 @@ from random import randint
 debug = False
 
 
-#Settings that affect the game
 settings = {
     "number of guesses": 10,
     "right number right place": "✓",
@@ -27,6 +26,7 @@ settings = {
     "win_message": "\n\33[32m"+"#"*7+" DU VANN!!! "+"#"*7+"\n\33[0m",
     "fail_message": "\n\33[31m" + " "*6 + "Du förlorade :(\n\33[0m"
 }
+
 #Adds arrows to the input automagicaly.
 def input_(texts: str) -> str:
     return input(f"\n{texts} -> ")
@@ -49,19 +49,15 @@ def numcheck(nums: str) -> bool:
 
 def ask(question: str, true_option: str, false_option: str) -> bool:
     """
-    Asks a question that can have two answers essentialy 
-    true or false and then returns a bool based on that.
+    Asks a question that can have two answers.
     Do you want to question? yes/true (y)/(n) no/false
     """
     while True:
         raw_input = str(input_(question))
-        if raw_input.isalpha():
-            if  raw_input.lower() == true_option:
-                return True
-            elif raw_input.lower() == false_option:
-                return False
-            else:
-                print(f"{raw_input} är inte en accepterad input.\n")
+        if raw_input.lower() == true_option:
+            return True
+        elif raw_input.lower() == false_option:
+            return False
         else:
             print(f"{raw_input} är inte en accepterad input.\n")
 
@@ -69,7 +65,7 @@ def gissning() -> list[int]:
     """
     A input checker that filters out and numbers.
     """
-    listan_gissning= []
+    listan_gissning: list[int] = []
     while True:
         kod_gissning= (input_("\nAnge gissning som föjld av fyra siffror"))
         if not (len(kod_gissning) == 4):
@@ -127,7 +123,7 @@ def draw(answer_list: list[str], feedback: list[str], guesses: int):
     middle_part = "" #Draws the correct amount of "Segments" depending on the game settings.
     for i in range(0, settings["number of guesses"]):
         try:  #Checks if the index exists in the lists.
-            middle_part += f"█ {i+1: <4}{answer_list[i]}   {feedback[i]}  █\n"      #Used Guess Segment
+            middle_part += f"█ {i: <4}{answer_list[i]}   {feedback[i]}  █\n"      #Used Guess Segment
         except IndexError:
             middle_part += f"█ {i+1: <4}{settings['background_character']*19}█\n"   #Unused Guess Segment
     bottom_text = f"{str(guesses)+' Gissningar kvar': ^24}"
@@ -141,22 +137,20 @@ def generate_feedback(answer: list[int], user_guess: list[int]) -> list[str]:
     based on wether or not the numbers
     match or not.
     """
-    feedback_str: str = []
+    feedback_str: str = ""
     rights = 0
     mabyes = 0
     for i in range(0,7):
         occuranses = answer.count(i)
         for guess_num_index in range(0, len(user_guess)):
-            if user_guess[guess_num_index] is i:
-                if user_guess[guess_num_index] is answer[guess_num_index]:
-                    #feedback_str += settings["right number right place"]
+            if user_guess[guess_num_index] == i:
+                if user_guess[guess_num_index] == answer[guess_num_index]:
                     occuranses -= 1
                     rights += 1
 
         for guess_num_index in range(0, len(user_guess)):
-            if (user_guess[guess_num_index] is i) and (occuranses > 0):
-                if (user_guess[guess_num_index] in answer) and (user_guess[guess_num_index] is not answer[guess_num_index]):
-                    #feedback_str += settings["right number wrong place"]
+            if (user_guess[guess_num_index] == i) and (occuranses > 0):
+                if (user_guess[guess_num_index] in answer) and (user_guess[guess_num_index] !=  answer[guess_num_index]):
                     occuranses -= 1
                     mabyes += 1
 
@@ -172,15 +166,15 @@ def game(diff: int):
     """
     Main loop for the game.
     """
-    feedback_return_list: list[list] = [] #List of str contains the feedback.
-    guess_list: list[list] = []  #List of int contains user guesses.
-    answer = create_nums(diff) # Creates the code you're trying to guess.
+    feedback_return_list: list[list] = []
+    guess_list: list[list] = []
+    answer = create_nums(diff)
     for guess_num in range(1,settings["number of guesses"]+1): #Guess loop
         user_guess = gissning()
         guess_list.append(" ".join(str(e) for e in user_guess))
         feedback_return_list.append(" ".join(generate_feedback(answer,user_guess)))
         draw(guess_list, feedback_return_list, settings['number of guesses']-guess_num) #Draws gui
-        if user_guess == answer: # Does some special thing if you win
+        if user_guess == answer:
             print(settings["win_message"]) 
             break
         elif guess_num == settings["number of guesses"]:
